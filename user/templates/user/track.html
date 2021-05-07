@@ -1,0 +1,145 @@
+<!-- ======================================หน้าติดตามการจอง แสดงรายละเอียดการจอง ======================== -->
+
+{% extends 'base.html' %}
+{% block title %}
+<title>Tracking</title>
+{% endblock title%}
+{% block base %}
+{% load static %}
+<style>
+.size{
+  padding: 0px;
+  margin: 0px;
+  margin-left: 20px;
+
+  font-size: 14px;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 450px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+    
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+</style>
+
+
+<br><br>
+<div class="container shadow bg-light" >
+    <div class="row">
+        <div class="col-12 ">
+        <form method="get" action="">
+            {% csrf_token %}
+            <br>
+            <center><h1> ติดตามการจอง </h1>
+            <h2>"{{book_list.room_id.name}}" </h2></center>
+        </div>
+        <div></div>
+        <div class="col-4  p-3" >
+            <div class=" p-3 ">
+
+              <table class="table table-borderless">
+                <tbody>                       
+                  <tr >
+                    <td width="5%"> 
+                        <img   src="{% static 'complete.png' %}" style="width: 50px;">
+                    </td>
+                    <td width="">
+                        ยื่นคำร้อง
+                        <p>{{book_list.booking_id.date}}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    {% for st in booking_st %}
+                    {% if st.teacher_result == 1 %}
+                    <td>  <img   src="{% static 'wait.png' %}" style="width: 50px;"></td>
+                    {% elif st.teacher_result == 2 %}
+                    <td>  <img   src="{% static 'complete.png' %}" style="width: 50px;"></td>
+                    {% else %}
+                    <td>  <img   src="{% static 'deny.png' %}" style="width: 50px;"></td>
+                  {% endif %}
+                  {% endfor %}
+                    <td>อาจารย์อนุมัติ
+                      {% for st in booking_st %}
+                        <p>{{ st.teacher_date}}</p>
+                      {% endfor %}
+                    </td>
+                    
+                    
+                  </tr>
+                  <tr>
+                    {% for st in booking_st %}
+                      {% if st.staff_result == 1 %}
+                      <td>  <img   src="{% static 'wait.png' %}" style="width: 50px;"></td>
+                      {% elif st.staff_result == 2 %}
+                      <td>  <img   src="{% static 'complete.png' %}" style="width: 50px;"></td>
+                      {% else %}
+                      <td>  <img   src="{% static 'deny.png' %}" style="width: 50px;"></td>
+                    {% endif %}
+                    {% endfor %}
+
+                    <td>เจ้าหน้าที่สถานที่อนุมัติ
+                      {% for st in booking_st %}
+                      <p>{{ st.staff_date}}</p>
+                    {% endfor %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+           
+              {% for s in student %}
+              {% if request.user.id == s.user_id_id %}
+              <p class="size"> ผู้จอง {{ request.user.first_name }} {{ request.user.last_name }}</p> 
+              <p class="size"> รหัสนักศึกษา {{ s.stu_id }} </p>
+              <p class="size"> ชั้นปี {{s.year}} </p>
+              {% endif %}
+            {% endfor %}
+
+              <p class="size"> วันที่ส่งคำร้อง : {{book_list.booking_id.date}} </p>
+              <p class="size"> เหตุผลในการจอง : {{book_list.booking_id.description}}</p>
+
+                   
+            </div> 
+
+        </div>
+        <div class="col-8 p-3 ">
+            <div class="p-3 table-wrapper-scroll-y my-custom-scrollbar" style="height: 400px;">
+
+              
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    
+                    <th scope="col">วันที่จอง</th>
+                    <th scope="col">เวลา</th>
+                   
+                  </tr>
+                </thead>
+                <tbody>
+
+                    {% for all in all_book %}
+                    {% if all.booking_id == book_list.booking_id %}
+                  <tr>
+                
+                    <td>{{ all.bookdate }}</td>
+                    <td>{{ all.start_time |time:'H:i'}} - {{ all.end_time |time:'H:i'}}</td>
+                
+                  </tr>
+                 {% endif %}
+                 {% endfor %}
+                </tbody>
+              </table>
+             
+           
+                  
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock base %}

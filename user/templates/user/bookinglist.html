@@ -1,0 +1,130 @@
+<!-- =====================หน้าrequestรายการจอง คือแสดงรายการคำขอ แล้วไปอนุมัติ จะแก้ชื่อแต่บัคต้องแก้หลายที่======================================= -->
+
+{% extends 'base.html' %}
+{% block title %}
+<title>All Bookinglist</title>
+{% endblock title%}
+{% block search %}
+<form class="form-inline my-2 my-lg-0" method="POST" action="{% url 'bookinglistall' %}">
+  {% csrf_token %}
+  <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search">
+</form>
+{% endblock search %}
+
+{% block base %}
+
+
+
+<br>
+<br>
+<div class="container shadow bg-light" style=" height:600px;">
+  <br>
+<div class="row">
+  <div class="col-1"></div>
+  <div class="col-9">
+    <h2>List Request: {{ count }}</h2>
+    </div> 
+    <div class="col-2">
+      <form action="{% url 'bookinglistall' %}" method="POST">
+        {% csrf_token %}
+  
+        
+        </form>
+      </form>
+      
+    </div>   
+</div>
+<br>
+
+
+<center>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style-profile.css'%}">
+    <div  class="table-wrapper-scroll-y my-custom-scrollbar" style=" height:450px;">
+     
+    <table class="table table-hover " >
+        <thead >
+          <tr>
+            <th scope="col" style="width: 10%">ชื่อห้อง</th>
+            <th scope="col" style="width: 15%">วันที่ส่งคำร้อง</th>
+            <th scope="col" style="width: 15%">ผู้ขอ</th>
+            <th scope="col" style="width: 15%">อาจารย์</th>
+            <th scope="col" style="width: 15%">เจ้าหน้าที่</th>
+            
+         
+          </tr>
+        </thead>
+        <tbody> 
+
+        {% for bl in all_booklist%}
+        {% for st in stbooking %}
+        {% if bl.booking_id.id == st.booking_id.id %}
+        {% if st.teacher_result != 2 or st.staff_result != 2%}
+          {% if st.teacher_result != 3 or st.staff_result != 3%}
+    
+          <tr>
+            <td>{{bl.room_id.name}} </td> 
+            <td>{{bl.booking_id.date}}</td>
+      
+            <td>{{bl.booking_id.user_id.first_name}} {{bl.booking_id.user_id.last_name}}</td>
+            <td style="width: 10%">
+              
+            {% if group == 'อาจารย์' %}
+
+                  {% if st.teacher_result == 1 %}
+                  <a href="{% url 'accept' bl.list_no %}"><button type="submit" class="btn btn-warning">อนุมัติ</button></a>
+                  {% elif st.teacher_result == 2 %}
+                  <span class="badge badge-success">อนุมัติ</span>
+                  {% else %}
+                  <span class="badge badge-danger">ไม่อนุมัติ</span>
+                {% endif %}
+           
+            {% else %}
+                  {% if st.teacher_result == 1 %}
+                  <span class="badge badge-light">รออนุมัติ</span>
+                  {% elif st.teacher_result == 2 %}
+                  <span class="badge badge-success">อนุมัติ</span>
+                  {% else %}
+                  <span class="badge badge-danger">ไม่อนุมัติ</span>
+                {% endif %}
+            {% endif %}
+          </td>
+            
+            <td style="width: 10%">
+              {% if group == 'เจ้าหน้าที่สถานที่' %}
+                  {% if st.staff_result == 1 %}
+                  <a href="{% url 'accept' bl.list_no %}"><button type="submit" class="btn btn-warning">อนุมัติ</button></a>
+                  {% elif st.staff_result == 2 %}
+                  <span class="badge badge-success">อนุมัติ</span>
+                  {% else %}
+                  <span class="badge badge-danger">ไม่อนุมัติ</span>
+                {% endif %}
+            {% else %}
+                  {% if st.staff_result == 1 %}
+                  <span class="badge badge-light">รออนุมัติ</span>
+                  {% elif st.staff_result == 2 %}
+                  <span class="badge badge-success">อนุมัติ</span>
+                  {% else %}
+                  <span class="badge badge-danger">ไม่อนุมัติ</span>
+                {% endif %}
+           {% endif %}
+          
+            </td>
+          </tr>
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% endfor%}
+          {% endfor%}
+
+
+        </tbody>
+      </table>
+     
+    </div>
+    </center>
+  </div>
+
+
+
+{% endblock base %}

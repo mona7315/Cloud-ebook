@@ -1,0 +1,223 @@
+<!-- =====================จองห้อง======================================= -->
+{% extends 'base.html' %} {% block title %}
+<title>Booking</title>
+{% endblock title%} {% block base %}
+
+
+
+
+    {% if rangeBookingForm.errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{ rangeBookingForm.fromDate.errors }} {{ rangeBookingForm.fromTime.errors }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+    {% if formset.errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        
+        <strong>
+            {% for dict in formset.errors %}
+                {% for error in dict.values %}
+                    {{ error }}
+                {% endfor %}
+            {% endfor %}
+        </strong>
+
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+
+<br><br>
+
+
+<div class="container bg-light shadow p-3" >
+    <!-- container-->
+    <center>
+        <h2>คำร้องจอง {{room.name}}</h2>
+
+        <br>
+
+
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary active">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> จองหลายวัน
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="option2" autocomplete="off"> จองเป็นช่วง
+            </label>
+
+        </div>
+    </center>
+    <hr class="my-4">
+
+    
+    <form method="POST" action="{% url 'booking' rm_id %}">
+        {% csrf_token %}
+        <div id="tab1" >
+            <!--  tab 1-->
+
+            <div >
+                <button type="button" class="btn btn-outline-warning" id="add_more" >เพิ่มวัน</button>
+            </div>
+            
+            <div id="form_set">
+                {{ formset.management_form }} {% for eachForm in formset.forms %} {{form.non_field_errors}}
+                {{form.errors}}
+
+                <div class="form-group row ">
+                    <label class="col-sm-1 col-form-label">วันที่</label>
+                    <div class="col-sm-4">
+                        {{ eachForm.bookdate }}
+                    </div>
+                    <label class="col-sm-1 col-form-label">จองเวลา</label>
+                    <div class="col-sm-2">
+                        {{ eachForm.start_time }}
+
+                    </div>
+                    <label class="col-sm-1 col-form-label">ถึงเวลา</label>
+                    <div class="col-sm-2">
+                        {{ eachForm.end_time }}
+
+                    </div>
+                    
+                </div>
+
+            </div>
+          
+            {% endfor %}
+
+
+            <div id="empty_form" style="display:none">
+
+                <div class="form-group row ">
+                    <label class="col-sm-1 col-form-label">วันที่</label>
+                    <div class="col-sm-4">
+                        {{ formset.empty_form.bookdate }}
+                    </div>
+                    <label class="col-sm-1 col-form-label">จองเวลา</label>
+                    <div class="col-sm-2">
+                        {{ formset.empty_form.start_time }}
+
+                    </div>
+                    <label class="col-sm-1 col-form-label">ถึงเวลา</label>
+                    <div class="col-sm-2">
+                        {{ formset.empty_form.end_time }}
+                    </div>
+                </div>
+
+            </div>
+          
+
+            <div class="form-group" id="form_set">
+                <div class='no_error'>
+                    <label class="col-sm-2 col-form-label">เหตุผลในการจอง</label>
+                    <div class="col-sm-12">
+                        {{ form.description }}
+
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" name="normalBooking" class="btn btn-dark" style="float: right;">ยืนยัน</button>
+            <br>
+            <br>
+        </div>
+
+    </form>
+
+
+
+
+    <form method="POST" action="{% url 'booking' rm_id %}">
+        {% csrf_token %}
+        <div id="tab2">
+            <!-- tab2 -->
+
+            <div class="form-group row">
+
+                <label class="col-sm-1 col-form-label">ตั้งแต่</label>
+                <div class="col-sm-3">
+                    {% comment %} <input type="date" class="form-control" name="date"> {% endcomment %}
+                    {{ rangeBookingForm.fromDate }}
+                </div>
+                <label class="col-sm-1 col-form-label">จนถึง</label>
+                <div class="col-sm-3">
+                    {% comment %} <input type="date" class="form-control" name="date"> {% endcomment %}
+                    {{ rangeBookingForm.toDate }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-1 col-form-label">จองเวลา</label>
+                <div class="col-sm-3">
+                    {% comment %} <input type="time" class="form-control" name="start_time"> {% endcomment %}
+                    {{ rangeBookingForm.fromTime }}
+                </div>
+                <label class="col-sm-1 col-form-label">ถึงเวลา</label>
+                <div class="col-sm-3">
+                    {% comment %} <input type="time" class="form-control" name="end_time"> {% endcomment %}
+                    {{ rangeBookingForm.toTime }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 col-form-label">เหตุผลในการจอง</label>
+                <div class="col-sm-12">
+                    {% comment %} <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
+                        name="reason"></textarea> {% endcomment %}
+                    {{ rangeBookingForm.description }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-dark" value="rangeBooking" name="rangeBooking"
+                style="float: right;">ยืนยัน</button>
+            <br>
+            <br>
+        </div>
+    </form>
+
+    
+</div>
+<!-- container-->
+
+
+
+<script>
+
+    $(document).ready(function () {
+        $("#tab2").hide();
+        $("#option1").click(function () {
+            $("#tab1").show();
+            $("#tab2").hide();
+
+        });
+        $("#option2").click(function () {
+            $("#tab1").hide();
+            $("#tab2").show();
+            $("#form_set").hide();
+
+            
+        });
+     
+        
+    });
+
+</script>
+
+<script>
+    $('#add_more').click(function () {
+        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+</script>
+
+
+
+
+
+{% endblock base %}

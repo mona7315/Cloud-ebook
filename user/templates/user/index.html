@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Index</title>
+{% endblock title%}
+{% block base %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style-index.css'%}">
+
+<body>
+
+
+
+  <div id="app">
+  
+
+
+    <div class="indexsize">
+
+      
+      
+      <br><br><br><br><br><br><br><br><br>
+   
+        
+
+
+<form >
+  {% csrf_token %}
+  <center>
+
+
+  <div class="input-group col-6">
+
+    <input type="text" class="form-control" aria-label="Text input with dropdown button" placeholder="ค้นหาห้อง" name="search" v-model="search">      <!-- v model คือ พิมไปแล้วข้อมูลอีกที่มันจะขึ้นตามที่พิม -->
+    <div class="input-group-append">
+      <button class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  [[ select ]]</button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="#" name="findtype"  v-for="(value,key) in type" v-on:click="filterType(key)" >[[ value ]]</a>
+      </div>
+    </div>
+  </div>
+  
+
+ 
+</center>
+        </form> 
+</div>
+
+    
+    <br>
+    
+
+    <center>
+
+
+      <div style="width: 80%" class="table-wrapper-scroll-y my-custom-scrollbar">
+        <table class="table table-hover " id="indextb" bgcolor="#eaecea">
+          <thead bgcolor="#ffc20e">
+            <tr>
+              <th scope="col" style="width: 10%;">ชื่อห้อง</th>
+              <th scope="col"style="width: 15%;">เวลาเปิด</th>
+              <th scope="col"style="width: 15%;">เวลาปิด</th>
+              <th scope="col"style="width: 10%;">ความจุ</th>
+              <th scope="col"style="width: 15%;">ประเภทห้อง</th>
+              <th style="width: 25%;"> 
+                {% if perms.user.change_room %}
+                <div class="md-form active-pink active-pink-2">
+                  <a href="{% url 'add'  %}"><button type="button" class="btn btn-danger" style="float: right;"><span class="oi oi-plus"></span></button></a>
+                </div>
+                {% endif %}
+              </th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <!-- วนลูปแสดงรายการห้อง ใช้vue.js -->
+            <tr v-for ="room in filterRoom">
+              <td>[[ room.name ]]</td>
+              <td>[[ room.start_time ]]</td>
+              <td>[[ room.end_time ]]</td>
+              <td>[[ room.capacity ]]</td>
+              <td>[[ type[room.room_type] ]]</td>
+              <td>
+                <a v-bind:href="'bookcheck/'+ room.id"><button type="submit"
+                    class="btn btn-info">สถานะการจอง</button></a>
+                {% if perms.user.add_booking %}
+                <a v-bind:href="'booking/'+ room.id"><button type="submit" class="btn btn-info">จอง</button></a>
+                {% endif %}
+                {% if perms.user.change_room %}
+                <a v-bind:href="'edit/' + room.id"><button type="submit" class="btn btn-danger"><span class="oi oi-pencil"></span></button></a>
+                {% endif %}
+
+                {% if perms.user.delete_room %}
+                <a v-bind:href="'delete/' + room.id"><button type="submit" class="btn btn-danger"><span class="oi oi-trash"></span></button></a>
+               {% endif %}
+              </td>
+              
+            </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </center>
+
+  </div>
+
+  <script>
+    const app = new Vue({
+      el: '#app',    //element
+      delimiters: ['[[', ']]'],  // แปลงเครื่องหมาย
+      data: {
+        message: 'Hello Vue!',   // พวกดาต้าเก็บตัวแปร
+        type: {},
+        select : "ประเภทห้อง",
+        all_room : [],
+        search : '',
+      },
+      methods: { // เก็บฟังชั่น
+        async filterType(id){
+          let room = await axios.get("http://localhost:8000/index/roomfilter/?type="+ id)
+          this.all_room = room.data
+          this.select = this.type[id]    //get id มาแสดง
+        }
+      },
+        
+//  ส่วนของsearchที่เราพิมแล้วมันก็ขึ้นตามที่เราพิม
+      computed: { // getter เรียก data มีการคำนวนก่อนเรียก 
+        filterRoom() {
+          if (this.search == ''){
+            return this.all_room
+          }
+         //คือค้นหาห้องตามที่เราพิมมาโดยดูจากidที่ส่งเข้ามา
+          return  this.all_room.filter((room) => {  
+            return room.name.toLowerCase().includes(this.search.toLowerCase())
+          })
+        }
+      },
+      async mounted(){ // ขอrequestมา ไปget ข้อมูลมา
+        console.log(this.type)
+        let type = await axios.get("http://localhost:8000/index/roomtype/")   // ที่อยู่ของข้อมูลประเภทห้องที่เป็นjson ที่เราไปget
+        let room = await axios.get("http://localhost:8000/index/room/")      // ที่อยู่ของข้อมูลห้องที่เป็นjson ที่เราไปget
+        this.all_room = room.data
+        console.log(type.data)
+        for (const el of type.data) {
+            this.type[el.id] = el.name
+        }
+        console.log(this.type)
+        console.log(this.all_room)
+        console.log(this.isSuperUser)
+
+        this.$forceUpdate()
+
+      }
+
+    })
+
+
+  </script>
+</body>
+{% endblock base %}

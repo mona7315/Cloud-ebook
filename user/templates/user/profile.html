@@ -1,0 +1,177 @@
+<!-- ======================================หน้าโปรไฟล์เปลี่ยนรหัส เปลี่ยนชื่อได้ ======================== -->
+
+
+{% extends 'base.html' %}
+
+{% block base %}
+      
+{% if error %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>{{ error }}</strong> 
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+ {% endif %}
+
+ {% if success %}
+ <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ success }}</strong> 
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+ {% endif %}
+
+<br>
+<br>
+
+{% load static %}
+  <link rel="stylesheet" href="{% static 'style-profile.css'%}">
+    <div class="container">
+       
+ 
+       <div class="row">
+            <div></div>
+         
+            <div class="col-4 p-3 ">
+                <div class="p-3 shadow bg-light" >
+                   <br>
+                   <br>
+                   {% load static %}
+                   <center> <img src="{% static 'user1.png' %}" style="width: 100px;"> 
+                    <br>
+                    <br>
+                   <h5>{{ request.user.first_name }} {{ request.user.last_name }}</h5>
+               <p>บทบาท : {{ group }}</p> 
+         
+                    </center>
+                    <br>
+                    {% if group != "ผู้ดูแลระบบ" %}
+                    <div class="row">
+                        <div class="col-6">
+                            <center>
+                                <p> {{ list }} </p>
+                                คำร้องทั้งหมด
+                            </center>
+                        </div>
+                        <div class="col-6">
+                            <center>
+                                <p> {{ accept }}</p>
+                                ได้รับการอนุมัติ
+                            </center>
+                        </div>
+                    </div>
+                    {% endif %}
+                  
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="p-3" >
+                    <div class="container">
+                        <div class="shadow  p-4 bg-light " >
+
+                              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                  <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">ข้อมูลส่วนบุคคล</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">เปลี่ยนรหัสผ่าน</a>
+                                </li>
+                              
+                              </ul>
+                              <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                    <br>
+                                    <center><h2> ข้อมูลส่วนบุคคล </h2></center>
+                                        <br>
+                                        <form method="POST" action="{% url 'profile' %}">
+                                            {% csrf_token %} 
+                                            <div class="form-group row">
+                                            <label  class="col-sm-3 col-form-label">ชื่อ</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"  class="form-control" name="fname" value="{{ request.user.first_name }}">
+                                            </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label  class="col-sm-3 col-form-label">นามสกุล</label>
+                                                <div class="col-sm-9">
+                                                <input type="text"  class="form-control" name="lname"  value="{{ request.user.last_name }}">
+                                                </div>
+                                            </div>
+                                            {% if group == "นักศึกษา" %}
+                                            <div class="form-group row">
+                                                <label  class="col-sm-3 col-form-label">รหัสนักศึกษา</label>
+                                                <div class="col-sm-9">
+                                                <input type="text" readonly class="form-control"  value="{{ student.stu_id }}"> 
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label  class="col-sm-3 col-form-label">ชั้นปี</label>
+                                                <div class="col-sm-9">
+                                                <input type="text" readonly class="form-control"  value="{{ student.year }}"> 
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label  class="col-sm-3 col-form-label">สาขา</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" readonly class="form-control"  value="{{ student.get_major_display }}"> 
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            <div class="form-group row">
+                                                <label  class="col-sm-3 col-form-label">email</label>
+                                                <div class="col-sm-9">
+                                                <input type="text" readonly class="form-control"  value="{{ request.user.email }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label  class="col-sm-3 col-form-label">username</label>
+                                                <div class="col-sm-9">
+                                                <input type="text" readonly    class="form-control"  value="{{ request.user.username }}">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <button type="submit" class="btn btn-info" style="float: right;" name="submitname" value="submitname">บันทึก</button>
+                                            <br>
+                                         
+                                </div>
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <br>
+                                    <h5>เปลี่ยนรหัสผ่าน</h5>
+                                    
+                                  <!-- <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label">รหัสผ่านปัจจุบัน</label>
+                                    <div class="col-sm-9">
+                                      <input type="password" class="form-control" id="inputPassword" name="oldpass" placeholder="Password">
+                                    </div>
+                                  </div> -->
+                                  <div class="form-group row">
+                                      <label for="inputPassword" class="col-sm-3 col-form-label">รหัสผ่านใหม่</label>
+                                      <div class="col-sm-9">
+                                        <input type="password" class="form-control" id="inputPassword" name="pass1" placeholder="Password">
+                                      </div>
+                                    </div>
+                                    <div class="form-group row">
+                                      <label for="inputPassword" class="col-sm-3 col-form-label">รหัสผ่านใหม่อีกครั้ง</label>
+                                      <div class="col-sm-9">
+                                        <input type="password" class="form-control" id="inputPassword" name="pass2" placeholder="Password">
+                                      </div>
+                                    </div>
+                                
+                                    <button type="submit" class="btn btn-info" style="float: right;" name="submitpass" value="submitpass">บันทึก</button>
+                                    <br>
+                              
+                                </div>
+                              </div>
+                            
+                                 
+                        </div>
+                    </div> 
+                </div>
+
+            </div>
+        </form>
+        </div> 
+    </div>
+    {% endblock base %}

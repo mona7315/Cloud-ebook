@@ -1,0 +1,78 @@
+<!-- ======================================แก้ไขห้อง ======================== -->
+
+{% extends 'base.html' %}
+{% block title %}
+<title>Edit Room</title>
+{% endblock title%}
+{% block base %}
+
+
+{% if error %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>{{ error }}</strong> 
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+{% endif %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 ">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <br>
+            <center><h1> แก้ไขห้อง </h1></center>
+        </div>
+        <div></div>
+        <div class="col-6  p-3" >
+            <div class="container">
+                <div    >
+                   {% load static %}
+                   <link rel="stylesheet" href="{% static 'style-profile.css'%}">
+                   <img  class="imgsize" src="{% static 'smartsharp.png' %}" alt="">
+                </div>
+            </div> 
+        </div>
+        <div class="col-6 p-3 ">
+            <div class="bg-light p-3 shadow" >
+            
+                <form method="POST" action="{% url 'edit' room_id %}">
+                    {% csrf_token %}
+                <div class="row">
+                    <div class="col-6">
+                        <p> ชื่อห้อง <input type="text" id="name" name="name" required="required" value="{{room.name}}"></p> 
+                    </div>
+                    <div class="col-6">
+                        <select id="inputState" class="form-control" name="type">
+                            <option selected>ประเภทห้อง</option>
+                            {% for rt in type %}
+                            <option value="{{rt.id}}">{{rt.name}}</option>
+                            {% endfor %}
+                          </select>
+                    </div>
+                  </div>
+            
+              <p> เวลาเปิด
+                  <input class="form-control" type="time" name="st_time" required="required"  value="{{room.start_time}}">
+              </p>
+                  <p> เวลาปิด
+                      <input class="form-control" type="time" name="ed_time" required="required" value="{{room.end_time}}">
+                  <p>
+              </p>
+                  <div class="form-group">
+                      <p> ความจุ
+                      <input class="form-control" type="text" name="cap" required="required" value="{{room.capacity}}">
+                  </p>
+              
+                    </div>
+              </p>
+              <button type="submit" class="btn btn-dark">ยืนยัน</button>
+              </form>
+                  
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock base %}

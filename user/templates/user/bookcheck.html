@@ -1,0 +1,71 @@
+<!-- =====================ตรวจสอบสถานะการจองห้อง======================================= -->
+
+{% extends 'base.html' %}
+{% block title %}
+<title>Check Room Booking</title>
+{% endblock title%}
+{% block base %}
+
+<style>
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 550px;
+    overflow: auto;
+    }
+.table-wrapper-scroll-y {
+    display: block;
+    }
+.imgsize{
+    height: 550px;
+    width: 550px;
+}
+
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 ">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <br>
+            <center><h1> ชื่อห้อง : {{room.name}} </h1></center>
+        </div>
+        <div></div>
+        <div class="col-6  p-3" >
+            <div class="container">
+                <div    >
+                   {% load static %}
+                  
+                   <img  class="imgsize" src="{% static 'smartsharp.png' %}" >
+                </div>
+            </div> 
+        </div>
+<!-- =====================แสดงวันที่และเวลาจอง======================================= -->
+
+        <div class="col-6 p-3 ">
+            <div class="bg-light p-3 shadow table-wrapper-scroll-y my-custom-scrollbar" >
+          
+                <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">วันที่จอง</th>
+                        <th scope="col">เวลาที่จอง</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for bl in all_booklist %}
+                        {% if bl.room_id.name == room.name %}
+                      <tr>
+                        <td>{{ bl.bookdate }}</td>
+                        <td>{{ bl.start_time |time:'H:i' }} - {{ bl.end_time  |time:'H:i'}}</td>
+                      </tr>
+                      {%endif%}
+                      {% endfor %} 
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock base %}

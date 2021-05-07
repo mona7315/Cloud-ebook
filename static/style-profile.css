@@ -1,0 +1,26 @@
+
+.pbg {
+    /* background-color: rgb(255, 255, 255);  */
+    background: #FF416C;
+    background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
+    background: linear-gradient(to right, #FF4B2B, #FF416C);
+    color: aliceblue;
+}
+.imgsize{
+    height: 550px;
+    width: 550px;
+}
+
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 500px;
+    overflow: auto;
+    }
+.table-wrapper-scroll-y {
+    display: block;
+    }
+.center{
+    text-align: center;
+}
+

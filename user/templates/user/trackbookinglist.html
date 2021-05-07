@@ -1,0 +1,96 @@
+<!-- ======================================หน้าแสดงรายการจองของนักศึกษา เพื่อเข้าสู่หน้าติดตามของแต่ละรายการ ======================== -->
+
+{% extends 'base.html' %}
+{% block title %}
+<title>Bookinglist</title>
+{% endblock title%}
+{% block base %}
+
+
+
+<br>
+<br>
+
+<center>
+  <div class="container shadow bg-light" style=" height:600px;">
+    <br>
+    <h3>ติดตามสถานะการจอง</h3>
+    <br>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style-profile.css'%}">
+    <div  class="table-wrapper-scroll-y my-custom-scrollbar" style=" height:450px;">
+     
+    <table class="table table-hover" >
+        <thead >
+          <tr>
+            <th scope="col">ชื่อห้อง</th>
+            <th scope="col">วันที่ส่งคำร้อง</th>
+ 
+            <th scope="col"></th>
+
+           
+         
+          </tr>
+        </thead>
+        <tbody> 
+
+        {% for bl in all_booklist %}
+        {% if bl.booking_id.user_id.id == user_id %}
+          <tr>
+            <td style="width: 10%">{{bl.room_id.name}}</td> 
+            <td style="width: 30%">{{bl.booking_id.date}}</td>
+          
+            <td style="width: 10%">
+              <a href="{% url 'tracking' bl.list_no %}"><button type="button" class="btn btn-danger">ตรวจสอบ</button></a>
+              <a href="{% url 'track_delete' bl.list_no %}"><button type="button" class="btn btn-danger">ลบ</button></a>
+
+            </td>
+            
+          </tr>
+          {% endif%}
+          {% endfor%}
+
+        </tbody>
+      </table>
+    </div>
+    </div>
+    </center>
+  <!-- {% load static %}
+  <link rel="stylesheet" href="{% static 'style-profile.css'%}">
+  <div class="container shadow bg-light" style=" height:600px;">
+   <br>
+   <h3>ติดตามสถานะการจอง</h3>
+   <br>
+    <div class="table-wrapper-scroll-y2 my-custom-scrollbar2">
+    <table class="table table-hover" bgcolor="#eaecea">
+        <thead >
+          <tr>
+            <th scope="col">ชื่อห้อง</th>
+            <th scope="col">วันที่</th>
+            <th scope="col">เวลา</th>
+         
+
+          </tr>
+        </thead>
+        <tbody> 
+        {% for rm in all_room %}
+          <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+
+            <td>
+            <a href="{% url 'edit' rm.room_id %}"><button type="submit" class="btn btn-danger">ตรวจสถานะ</button></a>
+            </td>
+       
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div> -->
+    <!-- </center> -->
+
+
+
+{% endblock base %}

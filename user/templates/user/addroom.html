@@ -1,0 +1,79 @@
+<!-- =====================หน้าเพิ่มห้อง======================================= -->
+
+{% extends 'base.html' %}
+{% block title %}
+<title>Add Room</title>
+{% endblock title%}
+{% block base %}
+
+  {% if form.errors %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>{{ form.name.errors }}</strong> 
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+{% endif %}
+  
+<div class="container">
+    <div class="row">
+        <div class="col-12 ">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <br>
+                <center>
+                    <h1> เพิ่มห้อง </h1>
+                </center>
+        </div>
+        <div></div>
+        <div class="col-6  p-3">
+            <div class="container">
+                <div>
+                    {% load static %}
+                    <link rel="stylesheet" href="{% static 'style-profile.css'%}">
+                    <img class="imgsize" src="{% static 'smartsharp.png' %}" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="col-6 p-3 ">
+            <div class="bg-light p-3 shadow">
+
+<!-- =====================ฟอร์มเพิ่มห้อง======================================= -->
+
+                <form method="POST" action="{% url 'add'%}">
+                    {% csrf_token %}
+                   <div class="row">
+                        <div class="col-6"> 
+                            
+                            <p>                     
+                                <label for="{{ form.name.id_for_label }}"> {{ form.name.label }} </label>
+                                {{ form.name }}
+                            </p>
+                        </div>
+                        <div class="col-6">
+                        <p>
+                            <label for="{{ form.room_type.id_for_label }}"> {{ form.room_type.label }} </label>
+                            {{ form.room_type }}    
+                        </p>                     
+                       </div>
+                    </div>
+                        <p>  
+                            <label for="{{ form.start_time.id_for_label }}"> {{ form.start_time.label }} </label>
+                            {{ form.start_time }}
+                        </p>
+                        <p> <label for="{{ form.end_time.id_for_label }}"> {{ form.end_time.label }} </label>
+                        {{ form.end_time }}
+                        </p>
+                        <div class="form-group">
+                            <label for="{{ form.capacity.id_for_label }}"> {{ form.capacity.label }} </label>
+                            {{ form.capacity }}
+                        </div>
+                    <button type="submit" class="btn btn-dark">ยืนยัน</button>
+                </form>
+<!-- ============================================================================ -->
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock base %}

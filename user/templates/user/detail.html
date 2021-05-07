@@ -1,0 +1,153 @@
+<!-- ======================================หน้าแสดงรายละเอียดของประวัติการจองต่างๆ ======================== -->
+{% extends 'base.html' %}
+{% block title %}
+<title>Detail</title>
+{% endblock title%}
+{% block base %}
+<style>
+.my-custom-scrollbar {
+    position: relative;
+    height: 450px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}
+</style>
+<br><br>
+<div class="container">
+       
+ <form action="{% url 'detail' bl_id %}" method="POST">
+    {% csrf_token %}
+<!-- ======================================ตารางวันที่เวลาจอง ======================== -->
+
+    <div class="row">
+         <div></div>
+      
+         <div class="col-4 p-3 table-wrapper-scroll-y my-custom-scrollbar" style="height: 450px;">
+             <div class="p-3 shadow bg-light" >
+              
+                <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        
+                        <th scope="col">วันที่จอง</th>
+                        <th scope="col">เวลา</th>
+                       
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for all in all_book %}
+                        {% if all.booking_id == book_list.booking_id %}
+                      <tr>
+                    
+                        <td>{{ all.bookdate }}</td>
+                        <td>{{ all.start_time |time:'H:i'}} - {{ all.end_time |time:'H:i'}}</td>
+                    
+                      </tr>
+                     {% endif %}
+                     {% endfor %}
+                    </tbody>
+                  </table>
+                 <br>
+                
+                
+                 
+               
+             </div>
+         </div>
+<!-- ======================================ตารางวันที่เวลาจอง ======================== -->
+
+
+<!-- ======================================รายละเอียดผู้จอง ======================== -->
+
+         <div class="col-8">
+             <div class="p-3" >
+                 <div class="container">
+                     <div class="shadow  p-4 bg-light " >
+                        <center><h2> รายละเอียดคำร้องจองสถานที่ </h2></center>
+                    
+                        <br>
+                        
+                        <div class="form-group row">
+                            <label  class="col-sm-3 col-form-label">ชื่อ</label>
+                            <div class="col-sm-9">
+                                <input type="text" readonly class="form-control" name="fname" value="{{ book_list.booking_id.user_id.first_name }} {{ book_list.booking_id.user_id.last_name }}">
+                            </div>
+                            </div>
+                            {% for s in student %}
+                    {% if book_list.booking_id.user_id.id == s.user_id_id %}
+                            <div class="form-group row">
+                                <label  class="col-sm-3 col-form-label">รหัสนักศึกษา</label>
+                                <div class="col-sm-9">
+                                    <input type="text" readonly class="form-control" name="fname" value="{{ s.stu_id }}">
+                                </div>
+                                </div>
+
+                        <div class="form-group row">
+                                <label  class="col-sm-3 col-form-label">ชั้นปี</label>
+                                <div class="col-sm-9">
+                                    <input type="text" readonly class="form-control" name="fname" value="{{ s.year }}">
+                                </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            <div class="form-group row">
+                                <label  class="col-sm-3 col-form-label">email</label>
+                                <div class="col-sm-9">
+                                    <input type="text" readonly class="form-control" name="fname" value="{{ book_list.booking_id.user_id.email }}">
+                                </div>
+                                </div>
+                               
+                        <div class="form-group row">
+                            <label  class="col-sm-3 col-form-label">ห้อง</label>
+                            <div class="col-sm-9">
+                                <input type="text" readonly class="form-control" name="fname" value="{{ book_list.room_id.name }}">
+                            </div>
+                            </div>
+
+                        <div class="form-group row">
+                            <label  class="col-sm-3 col-form-label">วันที่ส่งคำร้องขอ</label>
+                            <div class="col-sm-9">
+                                <input type="text" readonly class="form-control" name="fname" value="{{ book_list.bookdate }}">
+                            </div>
+                            </div>
+
+                              
+                        <div class="form-group row">
+                            <label  class="col-sm-3 col-form-label">เหตุผลในการจอง</label>
+                            <div class="col-sm-9">
+                                <textarea readonly class="form-control" id="exampleFormControlTextarea1" rows="3"  name="reason" required="required">{{ book_list.booking_id.description }} </textarea>
+                            </div>
+                            </div>
+                         <div class="form-group row">
+                            <label  class="col-sm-3 col-form-label">สถานะ</label>
+                            <div class="col-sm-9">
+                                {% if book_list.booking_id.status == 2 %}
+                                <span class="badge badge-success">อนุมัติ</span>
+                                {% else %}
+                                <span class="badge badge-danger">ไม่อนุมัติ</span>
+                                {% endif %}
+                            </div>
+                            </div>
+                             </div>
+                           </div>
+                        </form>
+                   
+                     </div>
+                 </div> 
+                 
+             </div>
+
+         </div>
+     </div> 
+     
+ </div>
+
+
+
+
+{% endblock base %}

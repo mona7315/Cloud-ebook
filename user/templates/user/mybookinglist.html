@@ -1,0 +1,60 @@
+<!-- =====================รายการจองห้องที่ได้รับการอนุมติ หรือไม่อนุมัติ เป็นประวัติของตัวเอง======================================= -->
+
+{% extends 'list_base.html' %}
+{% block title %}
+<title>All Bookinglist</title>
+{% endblock title%}
+{% block search %}
+<form class="form-inline my-2 my-lg-0" method="POST" action="{% url 'mybookinglist' %}">
+  {% csrf_token %}
+  <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search">
+</form>
+{% endblock search %}
+{% block base %}
+<br>
+<br>
+<div class="container shadow bg-light" style=" height:600px;">
+
+<center>
+    <br>
+  <h2>รายการจอง</h2>
+  <br>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style-profile.css'%}">
+    <div class="table-wrapper-scroll-y my-custom-scrollbar" style=" height:450px;">
+     
+    <table class="table table-hover" >
+        <thead >
+          <tr>
+            <th scope="col" style="width: 5%;" >ชื่อห้อง</th>
+            <th scope="col" style="width: 30%;" >วันที่ส่งคำร้อง</th>
+       
+            <th scope="col" style="width: 5%;" ></th>
+
+           
+         
+          </tr>
+        </thead>
+        <tbody> 
+
+          {% for bl in all_booklist %}
+          {% if bl.booking_id.user_id.id == user_id %}
+          <tr>
+            <td>{{bl.room_id.name}}</td> 
+            <td>{{bl.booking_id.date}}</td>
+   
+            <td><a href="{% url 'detail' bl.list_no %}"><button type="submit" class="btn btn-warning" style="float: right;"><span class="oi oi-document"></span></button></a></td>
+          </tr>
+          {% endif %}
+          {% endfor%}
+
+         
+        </tbody>
+      </table>
+    </div>
+
+    </center>
+
+  </div>
+
+{% endblock base %}
