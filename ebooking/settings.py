@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'ebooking.wsgi.application'
 DATABASES = {
                 'default': {
                     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                    'NAME': 'it-kmitl-ebooking-database',
+                    'NAME': 'postgres',
                     'USER': 'postgres',
                     'PASSWORD': 'NonMonzMang7799',
                     'HOST': 'it-kmitl-ebooking-database.ciluasfmkj9g.ap-southeast-1.rds.amazonaws.com',
