@@ -84,16 +84,17 @@ WSGI_APPLICATION = 'ebooking.wsgi.application'
 DATABASES = {
                 'default': {
                     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                    'NAME': 'database-itkmitl-ebooking',
+                    'NAME': 'it-kmitl-ebooking-database',
                     'USER': 'postgres',
-                    'PASSWORD': 'nonmonamang',
-                    'HOST': 'database-itkmitl-ebooking.ciluasfmkj9g.ap-southeast-1.rds.amazonaws.com',
+                    'PASSWORD': 'NonMonzMang7799',
+                    'HOST': 'it-kmitl-ebooking-database.ciluasfmkj9g.ap-southeast-1.rds.amazonaws.com',
                     # 'NAME': 'ebookingdb',
                     # 'USER': 'postgres',
                     # 'PASSWORD': '1234',
                     # 'HOST': 'localhost',
                     'PORT': '5432',
                     'DISABLE_SERVER_SIDE_CURSORS': True,
+                    
                 }
             }
 
